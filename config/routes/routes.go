@@ -14,6 +14,7 @@ func NewRouter() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 	r.Methods("GET").Path("/").HandlerFunc(exchangeController.Index)
 	r.Methods("GET").Path("/exchange/all-data").HandlerFunc(exchangeController.All)
+	r.Methods("POST").Path("/exchange/create").HandlerFunc(exchangeController.Store)
 	http.Handle("/", r)
 	return r
 }

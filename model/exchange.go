@@ -42,3 +42,33 @@ func (m Exchange) All() []Exchange {
 
 	return allData
 }
+
+func (m Exchange) Store() (database.DBUpdate, error) {
+	// Create prepared statement.
+	query := "INSERT INTO sp_exchange_rates (exchange_date, currency_from, currency_to, rate, created_by_ip, updated_by_ip, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
+	stmt, err := database.Db.Prepare(query)
+	database.Check(err)
+
+	// Execute the prepared statement and retrieve the results.
+	res, err := stmt.Exec(
+		&m.ExchangeDate,
+		&m.CurrencyFrom,
+		&m.CurrencyTo,
+		&m.Rate,
+		&m.CreatedByIp,
+		&m.UpdatedByIp,
+		&m.CreatedAt,
+		&m.UpdatedAt,
+	)
+	database.Check(err)
+	lastID, err := res.LastInsertId()
+	database.Check(err)
+	rowCnt, err := res.RowsAffected()
+	database.Check(err)
+
+	// Populate DBUpdate struct with last Id and num rows affected.
+	database.UpdateResult.ID = int(lastID)
+	database.UpdateResult.Affected = rowCnt
+
+	return database.UpdateResult, nil
+}
