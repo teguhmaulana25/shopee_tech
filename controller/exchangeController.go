@@ -18,7 +18,18 @@ func (ExchangeController) Index(w http.ResponseWriter, r *http.Request) {
 	response := res{
 		Code:    200,
 		Message: "Success",
-		Data:    "",
+		Data:    "Index",
+	}
+
+	renderJSON(w, response, http.StatusOK)
+}
+
+func (ExchangeController) All(w http.ResponseWriter, r *http.Request) {
+	query := exchange.All()
+	response := res{
+		Code:    200,
+		Message: "Success",
+		Data:    query,
 	}
 
 	renderJSON(w, response, http.StatusOK)

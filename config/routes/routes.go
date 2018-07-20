@@ -13,6 +13,7 @@ func NewRouter() *mux.Router {
 
 	r := mux.NewRouter().StrictSlash(true)
 	r.Methods("GET").Path("/").HandlerFunc(exchangeController.Index)
+	r.Methods("GET").Path("/exchange/all-data").HandlerFunc(exchangeController.All)
 	http.Handle("/", r)
 	return r
 }
