@@ -72,3 +72,25 @@ func (m Exchange) Store() (database.DBUpdate, error) {
 
 	return database.UpdateResult, nil
 }
+
+func (Exchange) Delete(from string, to string) database.DBUpdate {
+	// Create prepared statement.
+	stmt, err := database.Db.Prepare("DELETE FROM sp_exchange_rates where currency_from=? and currency_to=?")
+	database.Check(err)
+
+	// Execute the prepared statement and retrieve the results.
+	res, err := stmt.Exec(
+		from,
+		to,
+	)
+
+	database.Check(err)
+	rowCnt, err := res.RowsAffected()
+	database.Check(err)
+
+	// Populate DBUpdate struct with last id and num rows affected.
+	database.UpdateResult.ID = 0
+	database.UpdateResult.Affected = rowCnt
+
+	return database.UpdateResult
+}

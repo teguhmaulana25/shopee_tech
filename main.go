@@ -21,7 +21,7 @@ func init() {
 	log.SetLevel(log.DebugLevel)
 	if os.Getenv("ENV") == "dev" {
 		log.SetFormatter(&log.TextFormatter{
-			TimestampFormat: "2018-07-18T15:04:05.000",
+			TimestampFormat: "2006-01-02T15:04:05.000",
 			FullTimestamp:   true,
 		})
 	} else {

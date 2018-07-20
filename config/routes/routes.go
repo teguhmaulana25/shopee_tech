@@ -15,6 +15,7 @@ func NewRouter() *mux.Router {
 	r.Methods("GET").Path("/").HandlerFunc(exchangeController.Index)
 	r.Methods("GET").Path("/exchange/all-data").HandlerFunc(exchangeController.All)
 	r.Methods("POST").Path("/exchange/create").HandlerFunc(exchangeController.Store)
+	r.Methods("DELETE").Path("/exchange/delete/{from}/{to}").HandlerFunc(exchangeController.Delete)
 	http.Handle("/", r)
 	return r
 }

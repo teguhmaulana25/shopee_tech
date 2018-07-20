@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"github.com/teguhmaulana25/shopee_tech/model"
 )
@@ -17,6 +18,11 @@ type ExchangeController struct{}
 
 func NewExchangeController() ExchangeController {
 	return ExchangeController{}
+}
+
+type filter struct {
+	CurrentDate string
+	LastDate    string
 }
 
 func (ExchangeController) Index(w http.ResponseWriter, r *http.Request) {
@@ -94,6 +100,20 @@ func (ExchangeController) Store(w http.ResponseWriter, r *http.Request) {
 		renderJSON(w, response, http.StatusUnprocessableEntity)
 		return
 	}
+	response := res{
+		Code:    200,
+		Message: "Success",
+		Data:    query,
+	}
+
+	renderJSON(w, response, http.StatusOK)
+}
+
+func (ExchangeController) Delete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	// Query the database.
+	query := exchange.Delete(vars["from"], vars["to"])
+
 	response := res{
 		Code:    200,
 		Message: "Success",
