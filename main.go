@@ -15,7 +15,7 @@ func init() {
 	os.Setenv("DBPASS", "teguhadmin123")
 	os.Setenv("DBHOST", "localhost")
 	os.Setenv("DBDATABASE", "db_shopee_exchange")
-	os.Setenv("PORT", "8080")
+	os.Setenv("PORT", "8083")
 	os.Setenv("ENV", "dev") // dev or production
 
 	log.SetLevel(log.DebugLevel)
