@@ -142,3 +142,19 @@ func (ExchangeController) Tracked(w http.ResponseWriter, r *http.Request) {
 
 	renderJSON(w, response, http.StatusOK)
 }
+
+func (ExchangeController) Find(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	currencyFrom := vars["from"]
+	currencyTo := vars["to"]
+
+	// Query the database.
+	query := exchange.Find(currencyFrom, currencyTo)
+	response := res{
+		Code:    200,
+		Message: "Success",
+		Data:    query,
+	}
+
+	renderJSON(w, response, http.StatusOK)
+}

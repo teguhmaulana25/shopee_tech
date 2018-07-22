@@ -118,3 +118,26 @@ func (m Exchange) Tracked(current_date string, last_date string) []Exchange {
 	}
 	return allData
 }
+
+func (m Exchange) Find(currencyFrom string, currencyTo string) []Exchange {
+	var allData []Exchange
+
+	query := "SELECT id, exchange_date, currency_from, currency_to, rate FROM sp_exchange_rates WHERE currency_from='" + currencyFrom + "' and currency_to='" + currencyTo + "' ORDER BY id DESC"
+	rows, err := database.Db.Query(query)
+	database.Check(err)
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&m.ID,
+			&m.ExchangeDate,
+			&m.CurrencyFrom,
+			&m.CurrencyTo,
+			&m.Rate,
+		)
+		database.Check(err)
+		allData = append(allData, m)
+	}
+
+	return allData
+}
