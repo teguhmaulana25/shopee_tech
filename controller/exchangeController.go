@@ -122,3 +122,33 @@ func (ExchangeController) Delete(w http.ResponseWriter, r *http.Request) {
 
 	renderJSON(w, response, http.StatusOK)
 }
+
+func (ExchangeController) Tracked(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	// layoutTime := "2014-09-12T11:45:26.371Z"
+	currentDate := vars["date"]
+	currentDateConvert, err := time.Parse("2006-01-02", currentDate)
+	Check(err)
+
+	getLastDate := currentDateConvert.AddDate(0, 0, -7)
+	lastDate := getLastDate.Format("2006-01-02")
+	//currentDateConvert := currentDate
+	//last_date := time.Now().Add(-1 * time.Hour * 24 * 5)
+	//last_date := currentDateConvert.Add(-1 * time.Hour * 24 * 5)
+	//last_date := time.Now().AddDate(0, 0, -7)
+
+	// fmt.Println(time.Now())
+	// fmt.Println(currentDate)
+	// fmt.Println(last_date)
+	// //fmt.Println(time.Now())
+	// fmt.Println(string(last_date.Format("2006-01-02")))
+	// Query the database.
+	query := exchange.Tracked(currentDate, lastDate)
+	response := res{
+		Code:    200,
+		Message: "Success",
+		Data:    query,
+	}
+
+	renderJSON(w, response, http.StatusOK)
+}

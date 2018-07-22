@@ -1,13 +1,16 @@
 package model
 
-import "github.com/teguhmaulana25/shopee_tech/config/database"
+import (
+	"github.com/teguhmaulana25/shopee_tech/config/database"
+)
 
 type Exchange struct {
 	ID           int64   `json:"id,omitempty"`
 	ExchangeDate string  `json:"exchange_date"`
 	CurrencyFrom string  `json:"currency_from"`
 	CurrencyTo   string  `json:"currency_to"`
-	Rate         float64 `json:"rates"`
+	Rate         float64 `json:"rate"`
+	AverageRate  string  `json:"average_rate"`
 	CreatedByIp  string  `json:"created_by_ip"`
 	UpdatedByIp  string  `json:"updated_by_ip"`
 	CreatedAt    string  `json:"created_at,omitempty"`
@@ -93,4 +96,25 @@ func (Exchange) Delete(from string, to string) database.DBUpdate {
 	database.UpdateResult.Affected = rowCnt
 
 	return database.UpdateResult
+}
+
+func (m Exchange) Tracked(current_date string, last_date string) []Exchange {
+	var allData []Exchange
+	query := "SELECT avg(rate) as average_rate, exchange_date, currency_from, currency_to, rate FROM sp_exchange_rates WHERE exchange_date>='" + last_date + "' and exchange_date<='" + current_date + "' GROUP BY currency_from, currency_to"
+	rows, err := database.Db.Query(query)
+	database.Check(err)
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(
+			&m.AverageRate,
+			&m.ExchangeDate,
+			&m.CurrencyFrom,
+			&m.CurrencyTo,
+			&m.Rate,
+		)
+		database.Check(err)
+		allData = append(allData, m)
+	}
+	return allData
 }
