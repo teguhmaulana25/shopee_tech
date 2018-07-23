@@ -104,7 +104,7 @@ func checkUsername(w http.ResponseWriter, username string) error {
 }
 
 func checkPassword(w http.ResponseWriter, password []byte) error {
-	dummyPassword := "toor"
+	dummyPassword := "admin"
 	hash, err := bcrypt.GenerateFromPassword([]byte(dummyPassword), 14)
 	if err != nil {
 		log.Error("Generate bcrypt failed")

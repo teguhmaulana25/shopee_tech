@@ -11,8 +11,8 @@ type Exchange struct {
 	CurrencyTo   string  `json:"currency_to"`
 	Rate         float64 `json:"rate"`
 	AverageRate  string  `json:"average_rate"`
-	CreatedByIp  string  `json:"created_by_ip"`
-	UpdatedByIp  string  `json:"updated_by_ip"`
+	CreatedByIp  string  `json:"created_by_ip,omitempty"`
+	UpdatedByIp  string  `json:"updated_by_ip,omitempty"`
 	CreatedAt    string  `json:"created_at,omitempty"`
 	UpdatedAt    string  `json:"updated_at,omitempty"`
 }
