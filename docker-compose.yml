@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  mysql:
+    image: mariadb:latest
+    container_name: ${MYSQL_CONTAINER}
+    ports:
+      - 3306:3306
+    volumes:
+      - ./init.db:/docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      mysql-net:
+        ipv4_address: ${MYSQL_IP}
+    restart: always
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: ${PHPMYADMIN_CONTAINER}
+    depends_on:
+      - mysql
+    ports:
+     - 2112:2112
+    networks:
+      mysql-net:
+        ipv4_address: ${PHPMYADMIN_IP}
+    environment:
+      PMA_HOST: mysql
+    restart: always
+  app:
+    build: .
+    command: ["go", "run", "main.go"]
+    volumes:
+      - .:/go/src/github.com/teguhmaulana25/shopee_tech
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    
+networks:
+  mysql-net:
+    external:
+      name: ${MYSQL_NETWORK_NAME}
